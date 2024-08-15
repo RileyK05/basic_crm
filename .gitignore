@@ -1,2 +1,4 @@
 .env
 models mock text.txt
+views mock text.txt
+mock texts/templates mock text.txt
