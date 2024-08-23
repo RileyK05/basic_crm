@@ -9,6 +9,7 @@ class User(AbstractUser):
         ('Admin', 'Admin'),
         ('Manager', 'Manager'),
         ('SalesRep', 'Sales Representative'),
+        ('CustomerServ', 'Customer Service'),
     ]
 
     role = models.CharField(max_length=20, choices=ROLES, default='SalesRep')
@@ -27,6 +28,10 @@ class User(AbstractUser):
     def is_sales_rep(self):
         """Check if user has sales representative role."""
         return self.role == 'SalesRep'
+    
+    def is_customer_serv(self):
+        """Check if user has customer service role."""
+        return self.role == 'CustomerServ'
 
 class CustomerInformation(models.Model):
     name = models.CharField(max_length=255)
