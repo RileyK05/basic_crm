@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Our CRM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Our CRM</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="jumbotron text-center">
+            <h1 class="display-4">Welcome to Our CRM</h1>
+            <p class="lead">Manage your customers, products, leads, and engagements all in one place.</p>
+            <hr class="my-4">
+            <p>Already have an account? Login to access your dashboard.</p>
+            <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Login</a>
+            <a class="btn btn-success btn-lg" href="{% url 'signup' %}" role="button">Sign Up</a>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-4">
+                <h2>Customer Management</h2>
+                <p>Keep track of all your customers with our easy-to-use interface. Add, edit, and view customer details.</p>
+            </div>
+            <div class="col-md-4">
+                <h2>Product Management</h2>
+                <p>Manage your products and services. Add new products, update prices, and track sales.</p>
+            </div>
+            <div class="col-md-4">
+                <h2>Lead Management</h2>
+                <p>Follow up on potential clients with our lead management system. Track their progress from initial contact to sale.</p>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <h2>Engagement Tracking</h2>
+                <p>Monitor customer engagement with your business. Record and analyze all customer interactions.</p>
+            </div>
+            <div class="col-md-4">
+                <h2>Sales Analysis</h2>
+                <p>Get detailed reports on your sales performance. Identify trends and make data-driven decisions.</p>
+            </div>
+            <div class="col-md-4">
+                <h2>Internal Services</h2>
+                <p>Manage internal services with efficiency. Keep track of your internal metrics and growth projections.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light text-center text-lg-start mt-5 py-3">
+        <div class="container text-center">
+            <span class="text-muted">© 2024 Our CRM. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

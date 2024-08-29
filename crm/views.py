@@ -6,8 +6,15 @@ from django.utils import timezone
 from .models import (
     CustomerInformation, Product, ProductsPurchased, CustomerLead, Engagement, LifetimeValue, InternalServices
 )
-from .forms import CustomerForm, ProductForm, LeadForm, EngagementForm
+from .forms import CustomerForm, ProductForm, LeadForm, EngagementForm, CustomUserCreationForm
 
+def index(request):
+    return render(request, 'General/index.html')
+
+class CreateUserView(CreateView):
+    template_name = 'registration/create_user.html'
+    form_class = CustomUserCreationForm
+    success_url = reverse_lazy('index')
 
 class DashboardView(ListView):
     model = CustomerInformation

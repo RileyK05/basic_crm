@@ -1,5 +1,12 @@
 from django import forms
-from .models import CustomerInformation, Product, CustomerLead, Engagement
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from .models import CustomerInformation, Product, CustomerLead, Engagement, User
+
+class CustomUserCreationForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = ('username', 'first_name', 'last_name', 
+                  'email', 'password1', 'password2')
 
 class CustomerForm(forms.ModelForm):
     class Meta:
