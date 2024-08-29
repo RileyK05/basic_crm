@@ -51,7 +51,7 @@ class CustomerInformation(models.Model):
             avg_engagement = engagements.aggregate(
                 avg_engagement=models.Avg('level_of_engagement'))['avg_engagement']
             return churn_rate * (1 - avg_engagement)
-        return churn_rate
+        return "No engagement for customer"
 
     def __str__(self):
         return self.name
@@ -218,3 +218,4 @@ class InternalServices(models.Model):
 
     def __str__(self):
         return "Internal Services Data"
+
