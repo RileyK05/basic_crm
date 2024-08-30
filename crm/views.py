@@ -12,7 +12,7 @@ def index(request):
     return render(request, 'General/index.html')
 
 class CreateUserView(CreateView):
-    template_name = 'registration/create_user.html'
+    template_name = 'accounts/signup.html'
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('index')
 
