@@ -1,0 +1,18 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Confirm Lead Deletion{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Are you sure you want to delete this lead?</h1>
+    
+    <p><strong>Lead Name:</strong> {{ lead.name }}</p>
+    <p><strong>Lead Email:</strong> {{ lead.email }}</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, Delete Lead</button>
+        <a href="{% url 'lead_detail' lead.pk %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

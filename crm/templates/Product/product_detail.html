@@ -1,0 +1,26 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Product Detail: {{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Product Details</h1>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>{{ product.name }}</h3>
+        </div>
+        <div class="card-body">
+            <p><strong>Description:</strong> {{ product.description }}</p>
+            <p><strong>Price:</strong> ${{ product.price }}</p>
+            <p><strong>Stock:</strong> {{ product.stock }}</p>
+        </div>
+        <div class="card-footer">
+            <a href="{% url 'product_edit' product.pk %}" class="btn btn-primary">Edit Product</a>
+            <a href="{% url 'product_delete' product.pk %}" class="btn btn-danger">Delete Product</a>
+        </div>
+    </div>
+
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+</div>
+{% endblock %}

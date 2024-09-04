@@ -1,0 +1,25 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Lead Details{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Lead Details</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ lead.name }}</h5>
+            <p class="card-text">
+                <strong>Email:</strong> {{ lead.email }}<br>
+                <strong>Phone:</strong> {{ lead.phone_number }}<br>
+                <strong>Company:</strong> {{ lead.company }}<br>
+                <strong>Status:</strong> {{ lead.status }}<br>
+                <strong>Created At:</strong> {{ lead.created_at|date:"F d, Y" }}<br>
+                <strong>Last Updated:</strong> {{ lead.updated_at|date:"F d, Y" }}<br>
+                <strong>Notes:</strong> {{ lead.notes }}
+            </p>
+            <a href="{% url 'lead_edit' lead.pk %}" class="btn btn-primary">Edit Lead</a>
+            <a href="{% url 'lead_delete' lead.pk %}" class="btn btn-danger">Delete Lead</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Add New Lead{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Add a New Lead</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        
+        <button type="submit" class="btn btn-primary">Add Lead</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

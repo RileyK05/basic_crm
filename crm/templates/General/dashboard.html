@@ -1,0 +1,70 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}CRM Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Welcome to the CRM Dashboard</h1>
+    <p>This is your one-stop solution for managing customers, products, leads, and engagements.</p>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h3>Customers</h3>
+            <a href="{% url 'customer_add' %}" class="btn btn-primary mb-3">Add New Customer</a>
+            <ul>
+                {% for customer in customers %}
+                    <li>
+                        <a href="{% url 'customer_detail' customer.pk %}">{{ customer.name }}</a> - {{ customer.email }}
+                    </li>
+                {% empty %}
+                    <li>No customers found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col-md-6">
+            <h3>Leads</h3>
+            <a href="{% url 'lead_add' %}" class="btn btn-primary mb-3">Add New Lead</a>
+            <ul>
+                {% for lead in leads %}
+                    <li>
+                        <a href="{% url 'lead_detail' lead.pk %}">{{ lead.name }}</a> - {{ lead.status }}
+                    </li>
+                {% empty %}
+                    <li>No leads found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h3>Products</h3>
+            <a href="{% url 'product_add' %}" class="btn btn-primary mb-3">Add New Product</a>
+            <ul>
+                {% for product in products %}
+                    <li>
+                        <a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a> - ${{ product.price }}
+                    </li>
+                {% empty %}
+                    <li>No products found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col-md-6">
+            <h3>Engagements</h3>
+            <a href="{% url 'engagement_add' %}" class="btn btn-primary mb-3">Add New Engagement</a>
+            <ul>
+                {% for engagement in engagements %}
+                    <li>
+                        <a href="{% url 'engagement_detail' engagement.pk %}">{{ engagement.title }}</a> - {{ engagement.date }}
+                    </li>
+                {% empty %}
+                    <li>No engagements found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

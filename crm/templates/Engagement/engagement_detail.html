@@ -1,0 +1,24 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Engagement Detail{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Engagement Detail</h2>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Engagement with {{ engagement.customer.name }}</h5>
+            <p class="card-text"><strong>Start Date:</strong> {{ engagement.start_date }}</p>
+            <p class="card-text"><strong>End Date:</strong> {{ engagement.end_date }}</p>
+            <p class="card-text"><strong>Status:</strong> {{ engagement.status }}</p>
+            <p class="card-text"><strong>Description:</strong> {{ engagement.description }}</p>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="{% url 'engagement_edit' engagement.pk %}" class="btn btn-primary">Edit Engagement</a>
+        <a href="{% url 'engagement_delete' engagement.pk %}" class="btn btn-danger">Delete Engagement</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

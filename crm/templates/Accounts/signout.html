@@ -1,0 +1,11 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Sign Out{% endblock %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2>You have been signed out</h2>
+    <p>Thank you for using our CRM. See you again soon!</p>
+    <a href="{% url 'login' %}" class="btn btn-primary">Sign In Again</a>
+</div>
+{% endblock %}
