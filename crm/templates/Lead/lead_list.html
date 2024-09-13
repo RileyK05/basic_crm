@@ -1,0 +1,53 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Leads{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Leads</h1>
+    
+    <!-- Search Form -->
+    <form method="GET" action="{% url 'lead_list' %}">
+        <input type="text" name="lead_search" placeholder="Search Leads" class="form-control mb-3" value="{{ request.GET.lead_search }}">
+    </form>
+
+    <!-- Leads Table -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Customer Name</th>
+                <th>Status</th>
+                <th>Likelihood to Convert (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lead in leads %}
+                <tr>
+                    <td><a href="{% url 'customer_detail' lead.customer.pk %}">{{ lead.customer.name }}</a></td>
+                    <td><a href="{% url 'lead_detail' lead.pk %}">{{ lead.status }}</a></td>
+                    <td>{{ lead.likelihood_to_convert }}%</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">No leads found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <nav>
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+{% endblock %}

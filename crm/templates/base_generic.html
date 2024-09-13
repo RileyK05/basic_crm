@@ -1,64 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}CRM Dashboard{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
 </head>
 <body>
     {% if user.is_authenticated %}
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="{% url 'dashboard' %}">CRM</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'customer_add' %}">Add Customer</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'product_add' %}">Add Product</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'lead_add' %}">Add Lead</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'engagement_add' %}">Add Engagement</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-                        </li>
-                    </ul>
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 sidebar">
+            <h3>CRM</h3>
+            <ul>
+                <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li><a href="{% url 'internal' %}">Internal</a></li>
+                <li><a href="{% url 'customer_list' %}">Customers</a></li>
+                <li><a href="{% url 'lead_list' %}">Contacts/Leads</a></li>
+                <li><a href="{% url 'product_list' %}">Products</a></li>
+                <li><a href="{% url 'engagement_list' %}">Engagements</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 main-content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light w-100">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{% url 'dashboard' %}">Company Name</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Account</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
+            </nav>
+
+            <div class="container-fluid mt-5">
+                {% block content %}
+                <h1 class="text-center">Welcome to the CRM Dashboard</h1>
+                <p class="text-center">This is your one-stop solution for managing customers, products, leads, and engagements.</p>
+                {% endblock %}
             </div>
-        </nav>
+        </div>
+    </div>
+    {% else %}
+    <!-- If the user is not authenticated -->
+    <div class="container mt-5 text-center">
+        <h1>You need to log in to access the dashboard</h1>
+        <p>Please <a href="{% url 'login' %}">log in</a> or <a href="{% url 'signup' %}">sign up</a> to access the CRM.</p>
+    </div>
     {% endif %}
 
-    <div class="container mt-5">
-        {% block content %}
-        {% if user.is_authenticated %}
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>Welcome to the CRM Dashboard</h1>
-                    <p>This is your one-stop solution for managing customers, products, leads, and engagements.</p>
-                </div>
-            </div>
-        {% else %}
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>You need to log in to access the dashboard</h1>
-                    <p>Please <a href="{% url 'login' %}">log in</a> or <a href="{% url 'signup' %}">sign up</a> to access the CRM.</p>
-                </div>
-            </div>
-        {% endif %}
-        {% endblock %}
-    </div>
-
-    <footer class="bg-light text-center text-lg-start mt-auto py-3">
-        <div class="container text-center">
+    <footer class="mt-auto">
+        <div class="container">
             <span class="text-muted">© 2024 CRM Application</span>
         </div>
     </footer>

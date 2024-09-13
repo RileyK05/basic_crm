@@ -1,0 +1,76 @@
+/* Sidebar styles */
+.sidebar {
+    height: 100vh;
+    position: fixed;
+    background-color: #7b55c8f5; /* Royal purple */
+    padding: 20px;
+    width: 220px;
+}
+
+.sidebar h3 {
+    color: white;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar ul li a {
+    display: block;
+    padding: 10px;
+    color: white;
+    text-decoration: none;
+}
+
+.sidebar ul li a:hover {
+    background-color: #9370db; /* Lighter purple for hover */
+    color: white;
+}
+
+/* Main content styles */
+.main-content {
+    margin-left: 240px; /* Adjust this based on sidebar width */
+    padding: 20px;
+    color: #ccc;  /* Your requested color */
+    border-radius: 8px;
+    min-height: 100vh; /* Ensures full height coverage */
+}
+
+/* Fixing the navbar to span the entire width */
+.navbar {
+    width: 100%;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+}
+
+/* Footer styles */
+footer {
+    background-color: #9370db; /* Royal purple footer */
+    color: white;
+}
+
+footer a {
+    color: white;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Sticky footer */
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+footer {
+    margin-top: auto;
+    padding: 20px 0;
+}

@@ -1,0 +1,55 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Engagements{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Engagements</h1>
+    
+    <!-- Search Form -->
+    <form method="GET" action="{% url 'engagement_list' %}">
+        <input type="text" name="engagement_search" placeholder="Search Engagements" class="form-control mb-3" value="{{ request.GET.engagement_search }}">
+    </form>
+
+    <!-- Engagements Table -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Type of Engagement</th>
+                <th>Date</th>
+                <th>Level of Engagement</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for engagement in engagements %}
+                <tr>
+                    <td><a href="{% url 'customer_detail' engagement.customer.pk %}">{{ engagement.customer.name }}</a></td>
+                    <td><a href="{% url 'engagement_detail' engagement.pk %}">{{ engagement.type_of_engagement }}</a></td>
+                    <td>{{ engagement.engagement_date|date:"Y-m-d" }}</td>
+                    <td>{{ engagement.level_of_engagement }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">No engagements found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+        <nav>
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+{% endblock %}

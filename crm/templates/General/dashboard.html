@@ -7,63 +7,183 @@
     <h1>Welcome to the CRM Dashboard</h1>
     <p>This is your one-stop solution for managing customers, products, leads, and engagements.</p>
 
+    <!-- Customers Section -->
     <div class="row mt-4">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <h3>Customers</h3>
-            <a href="{% url 'customer_add' %}" class="btn btn-primary mb-3">Add New Customer</a>
-            <ul>
-                {% for customer in customers %}
-                    <li>
-                        <a href="{% url 'customer_detail' customer.pk %}">{{ customer.name }}</a> - {{ customer.email }}
-                    </li>
-                {% empty %}
-                    <li>No customers found.</li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <div class="col-md-6">
-            <h3>Leads</h3>
-            <a href="{% url 'lead_add' %}" class="btn btn-primary mb-3">Add New Lead</a>
-            <ul>
-                {% for lead in leads %}
-                    <li>
-                        <a href="{% url 'lead_detail' lead.pk %}">{{ lead.name }}</a> - {{ lead.status }}
-                    </li>
-                {% empty %}
-                    <li>No leads found.</li>
-                {% endfor %}
-            </ul>
+            <form method="GET" action="{% url 'dashboard' %}">
+                <input type="text" name="customer_search" placeholder="Search Customers" class="form-control mb-3" value="{{ request.GET.customer_search }}">
+            </form>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in customers %}
+                        <tr>
+                            <td><a href="{% url 'customer_detail' customer.pk %}">{{ customer.name }}</a></td>
+                            <td>{{ customer.email }}</td>
+                            <td>{{ customer.phone }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3">No customers found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- Pagination for customers -->
+            {% if is_paginated %}
+                <nav>
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                        {% endif %}
+                        <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+                        {% if page_obj.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
         </div>
     </div>
 
+    <!-- Leads Section -->
     <div class="row mt-4">
-        <div class="col-md-6">
-            <h3>Products</h3>
-            <a href="{% url 'product_add' %}" class="btn btn-primary mb-3">Add New Product</a>
-            <ul>
-                {% for product in products %}
-                    <li>
-                        <a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a> - ${{ product.price }}
-                    </li>
-                {% empty %}
-                    <li>No products found.</li>
-                {% endfor %}
-            </ul>
+        <div class="col-md-12">
+            <h3>Leads</h3>
+            <form method="GET" action="{% url 'dashboard' %}">
+                <input type="text" name="lead_search" placeholder="Search Leads" class="form-control mb-3" value="{{ request.GET.lead_search }}">
+            </form>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Likelihood to Convert</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lead in leads %}
+                        <tr>
+                            <td><a href="{% url 'lead_detail' lead.pk %}">{{ lead.customer.name }}</a></td>
+                            <td>{{ lead.status }}</td>
+                            <td>{{ lead.likelihood_to_convert }}%</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3">No leads found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- Pagination for leads -->
+            {% if is_paginated_leads %}
+                <nav>
+                    <ul class="pagination">
+                        {% if page_obj_leads.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?lead_page={{ page_obj_leads.previous_page_number }}">Previous</a></li>
+                        {% endif %}
+                        <li class="page-item active"><span class="page-link">{{ page_obj_leads.number }}</span></li>
+                        {% if page_obj_leads.has_next %}
+                            <li class="page-item"><a class="page-link" href="?lead_page={{ page_obj_leads.next_page_number }}">Next</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
         </div>
+    </div>
 
-        <div class="col-md-6">
+    <!-- Products Section -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h3>Products</h3>
+            <form method="GET" action="{% url 'dashboard' %}">
+                <input type="text" name="product_search" placeholder="Search Products" class="form-control mb-3" value="{{ request.GET.product_search }}">
+            </form>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                        <tr>
+                            <td><a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a></td>
+                            <td>${{ product.price }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="2">No products found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- Pagination for products -->
+            {% if is_paginated_products %}
+                <nav>
+                    <ul class="pagination">
+                        {% if page_obj_products.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?product_page={{ page_obj_products.previous_page_number }}">Previous</a></li>
+                        {% endif %}
+                        <li class="page-item active"><span class="page-link">{{ page_obj_products.number }}</span></li>
+                        {% if page_obj_products.has_next %}
+                            <li class="page-item"><a class="page-link" href="?product_page={{ page_obj_products.next_page_number }}">Next</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Engagements Section -->
+    <div class="row mt-4">
+        <div class="col-md-12">
             <h3>Engagements</h3>
-            <a href="{% url 'engagement_add' %}" class="btn btn-primary mb-3">Add New Engagement</a>
-            <ul>
-                {% for engagement in engagements %}
-                    <li>
-                        <a href="{% url 'engagement_detail' engagement.pk %}">{{ engagement.title }}</a> - {{ engagement.date }}
-                    </li>
-                {% empty %}
-                    <li>No engagements found.</li>
-                {% endfor %}
-            </ul>
+            <form method="GET" action="{% url 'dashboard' %}">
+                <input type="text" name="engagement_search" placeholder="Search Engagements" class="form-control mb-3" value="{{ request.GET.engagement_search }}">
+            </form>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for engagement in engagements %}
+                        <tr>
+                            <td><a href="{% url 'engagement_detail' engagement.pk %}">{{ engagement.type_of_engagement }}</a></td>
+                            <td>{{ engagement.engagement_date }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="2">No engagements found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- Pagination for engagements -->
+            {% if is_paginated_engagements %}
+                <nav>
+                    <ul class="pagination">
+                        {% if page_obj_engagements.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?engagement_page={{ page_obj_engagements.previous_page_number }}">Previous</a></li>
+                        {% endif %}
+                        <li class="page-item active"><span class="page-link">{{ page_obj_engagements.number }}</span></li>
+                        {% if page_obj_engagements.has_next %}
+                            <li class="page-item"><a class="page-link" href="?engagement_page={{ page_obj_engagements.next_page_number }}">Next</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
         </div>
     </div>
 </div>

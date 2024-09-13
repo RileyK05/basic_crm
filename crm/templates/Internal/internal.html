@@ -1,0 +1,39 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Internal Metrics{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Internal Metrics</h1>
+    
+    <!-- Display internal metrics -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Metric</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Current Revenue</td>
+                <td>${{ current_revenue }}</td>
+            </tr>
+            <tr>
+                <td>Projected Revenue</td>
+                <td>${{ projected_revenue }}</td>
+            </tr>
+            <tr>
+                <td>Current Growth Rate</td>
+                <td>{{ growth_rate }}%</td>
+            </tr>
+            <tr>
+                <td>Churn Rate</td>
+                <td>{{ churn_rate }}%</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- You can add more internal statistics or graphs here as needed -->
+</div>
+{% endblock %}
