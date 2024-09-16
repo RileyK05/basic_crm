@@ -5,7 +5,8 @@ from .views import (
     LeadCreateView, LeadDetailView, LeadUpdateView, LeadDeleteView,
     EngagementCreateView, EngagementDetailView, EngagementUpdateView, EngagementDeleteView,
     ProductsPurchasedCreateView, ProductsPurchasedUpdateView, ProductsPurchasedDeleteView,
-    CreateUserView, InternalView,CustomerListView, LeadListView, ProductListView, EngagementListView  
+    CreateUserView, InternalView, CustomerListView, LeadListView, ProductListView, EngagementListView,
+    signout_view, CustomLoginView
 )
 
 urlpatterns = [
@@ -52,6 +53,8 @@ urlpatterns = [
     path('products-purchased/<int:pk>/delete/', ProductsPurchasedDeleteView.as_view(), name='products_purchased_delete'),
     
     # Accounts
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('signup/', CreateUserView.as_view(), name='signup'),
+    path('accounts/login/', CustomLoginView.as_view(), name='login'), 
+    path('accounts/logout/', signout_view, name='logout'), 
+    path('accounts/', include('django.contrib.auth.urls')),  
+    path('signup/', CreateUserView.as_view(), name='signup'),  
 ]

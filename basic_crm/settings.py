@@ -1,5 +1,6 @@
 from pathlib import Path
 from decouple import config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -10,15 +11,14 @@ CRM_DIR = BASE_DIR / 'crm'
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-*%7h66@gw7f0()7&+fok+b4bc5$^44w$@7kwh9yq#-ygn)s3-4"
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-*%7h66@gw7f0()7&+fok+b4bc5$^44w$@7kwh9yq#-ygn)s3-4')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=[], cast=list)
 
 # Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "crm",
+    "crm",  # Your custom CRM application
 ]
 
 MIDDLEWARE = [
@@ -95,19 +95,14 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
-
-# Move the static files to 'crm/static'
 STATICFILES_DIRS = [CRM_DIR / "static"]
 
 # Media files (User uploaded content)
@@ -122,18 +117,30 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Custom User model
 AUTH_USER_MODEL = "crm.User"
 
-# Additional settings
-LOGIN_REDIRECT_URL = "dashboard"
-LOGOUT_REDIRECT_URL = "index"
+# Authentication settings
+LOGIN_URL = 'login'  # URL to redirect to for login
+LOGIN_REDIRECT_URL = "dashboard"  # URL to redirect to after login
+LOGOUT_REDIRECT_URL = "index"  # URL to redirect to after logout
 
 # Session settings
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 SESSION_COOKIE_NAME = 'sessionid'
-SESSION_COOKIE_AGE = 1209600
-SESSION_COOKIE_SECURE = False
+SESSION_COOKIE_AGE = 1209600  # 2 weeks
+SESSION_COOKIE_SECURE = False  # Set to True in production for HTTPS
 SESSION_SAVE_EVERY_REQUEST = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # CSRF settings
 CSRF_COOKIE_NAME = 'csrftoken'
-CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False  # Set to True in production for HTTPS
+
+# Additional settings for security in production
+if not DEBUG:
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    X_FRAME_OPTIONS = 'DENY'

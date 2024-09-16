@@ -1,4 +1,8 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import LoginView
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.db.models import Sum, Q
@@ -8,14 +12,32 @@ from .models import (
 )
 from .forms import CustomerForm, ProductForm, LeadForm, EngagementForm, CustomUserCreationForm
 
+# Home page
 def index(request):
     return render(request, 'General/index.html')
 
+# Custom Sign-Up View
 class CreateUserView(CreateView):
     template_name = 'accounts/signup.html'
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('index')
 
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)  
+        return redirect(self.success_url)
+
+# Custom Login View
+class CustomLoginView(LoginView):
+    template_name = 'accounts/login.html'
+    authentication_form = AuthenticationForm
+
+# Custom Logout View
+def signout_view(request):
+    logout(request)
+    return redirect('index')
+
+# Dashboard View
 class DashboardView(ListView):
     model = CustomerInformation
     template_name = 'General/dashboard.html'
@@ -62,9 +84,7 @@ class DashboardView(ListView):
         # Product Search/Filter Logic
         product_search = self.request.GET.get('product_search', '')
         if product_search:
-            products = Product.objects.filter(
-                Q(name__icontains=product_search)
-            )
+            products = Product.objects.filter(Q(name__icontains=product_search))
         else:
             products = Product.objects.all()
 
@@ -101,12 +121,12 @@ class DashboardView(ListView):
 
         return context
 
+# Customer Views
 class CustomerCreateView(CreateView):
     model = CustomerInformation
     form_class = CustomerForm
     template_name = 'Customer/customer_add.html'
     success_url = reverse_lazy('dashboard')
-
 
 class CustomerDetailView(DetailView):
     model = CustomerInformation
@@ -127,26 +147,23 @@ class CustomerDetailView(DetailView):
             context['lifetime_value'] = 0
         return context
 
-
 class CustomerUpdateView(UpdateView):
     model = CustomerInformation
     form_class = CustomerForm
     template_name = 'Customer/customer_edit.html'
     success_url = reverse_lazy('dashboard')
 
-
 class CustomerDeleteView(DeleteView):
     model = CustomerInformation
     template_name = 'Customer/customer_confirm_delete.html'
     success_url = reverse_lazy('dashboard')
 
-
+# Product Views
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'Product/product_add.html'
     success_url = reverse_lazy('dashboard')
-
 
 class ProductDetailView(DetailView):
     model = Product
@@ -161,26 +178,23 @@ class ProductDetailView(DetailView):
         )['total'] or 0
         return context
 
-
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'Product/product_edit.html'
     success_url = reverse_lazy('dashboard')
 
-
 class ProductDeleteView(DeleteView):
     model = Product
     template_name = 'Product/product_confirm_delete.html'
     success_url = reverse_lazy('dashboard')
 
-
+# Lead Views
 class LeadCreateView(CreateView):
     model = CustomerLead
     form_class = LeadForm
     template_name = 'Lead/lead_add.html'
     success_url = reverse_lazy('dashboard')
-
 
 class LeadDetailView(DetailView):
     model = CustomerLead
@@ -193,32 +207,28 @@ class LeadDetailView(DetailView):
         context['total_time_in_pipeline'] = (timezone.now().date() - lead.customer.created_at).days
         return context
 
-
 class LeadUpdateView(UpdateView):
     model = CustomerLead
     form_class = LeadForm
     template_name = 'Lead/lead_edit.html'
     success_url = reverse_lazy('dashboard')
 
-
 class LeadDeleteView(DeleteView):
     model = CustomerLead
     template_name = 'Lead/lead_confirm_delete.html'
     success_url = reverse_lazy('dashboard')
 
-
+# Engagement Views
 class EngagementCreateView(CreateView):
     model = Engagement
     form_class = EngagementForm
     template_name = 'Engagement/engagement_add.html'
     success_url = reverse_lazy('dashboard')
 
-
 class EngagementDetailView(DetailView):
     model = Engagement
     template_name = 'Engagement/engagement_detail.html'
     context_object_name = 'engagement'
-
 
 class EngagementUpdateView(UpdateView):
     model = Engagement
@@ -226,19 +236,17 @@ class EngagementUpdateView(UpdateView):
     template_name = 'Engagement/engagement_edit.html'
     success_url = reverse_lazy('dashboard')
 
-
 class EngagementDeleteView(DeleteView):
     model = Engagement
     template_name = 'Engagement/engagement_confirm_delete.html'
     success_url = reverse_lazy('dashboard')
 
-
+# Products Purchased Views
 class ProductsPurchasedCreateView(CreateView):
     model = ProductsPurchased
     template_name = 'Products-Purchased/products_purchased_add.html'
     fields = ['customer', 'product', 'number_of_products_purchased', 'date_of_sale', 'amount_spent']
     success_url = reverse_lazy('dashboard')
-
 
 class ProductsPurchasedUpdateView(UpdateView):
     model = ProductsPurchased
@@ -246,28 +254,25 @@ class ProductsPurchasedUpdateView(UpdateView):
     fields = ['customer', 'product', 'number_of_products_purchased', 'date_of_sale', 'amount_spent']
     success_url = reverse_lazy('dashboard')
 
-
 class ProductsPurchasedDeleteView(DeleteView):
     model = ProductsPurchased
     template_name = 'Products-Purchased/products_purchased_confirm_delete.html'
     success_url = reverse_lazy('dashboard')
 
-
+# Internal View
 class InternalView(TemplateView):
     template_name = 'Internal/internal.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         internal_services = InternalServices.objects.first()
-
         context['current_revenue'] = internal_services.current_revenue if internal_services else "N/A"
         context['projected_revenue'] = internal_services.projected_revenue if internal_services else "N/A"
         context['growth_rate'] = internal_services.current_growth_rate if internal_services else "N/A"
         context['churn_rate'] = internal_services.internal_churn_rate if internal_services else "N/A"
-
         return context
-    
-    
+
+# Customer List View
 class CustomerListView(ListView):
     model = CustomerInformation
     template_name = 'Customer/customer_list.html'
@@ -282,7 +287,7 @@ class CustomerListView(ListView):
             )
         return CustomerInformation.objects.all()
 
-
+# Lead List View
 class LeadListView(ListView):
     model = CustomerLead
     template_name = 'Lead/lead_list.html'
@@ -297,7 +302,7 @@ class LeadListView(ListView):
             )
         return CustomerLead.objects.all()
 
-
+# Product List View
 class ProductListView(ListView):
     model = Product
     template_name = 'Product/product_list.html'
@@ -310,7 +315,7 @@ class ProductListView(ListView):
             return Product.objects.filter(Q(name__icontains=query))
         return Product.objects.all()
 
-
+# Engagement List View
 class EngagementListView(ListView):
     model = Engagement
     template_name = 'Engagement/engagement_list.html'

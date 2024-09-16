@@ -21,7 +21,12 @@
                 <li><a href="{% url 'lead_list' %}">Contacts/Leads</a></li>
                 <li><a href="{% url 'product_list' %}">Products</a></li>
                 <li><a href="{% url 'engagement_list' %}">Engagements</a></li>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
+                <li>
+                    <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: block;">
+                        {% csrf_token %}
+                        <button type="submit" class="sidebar-link w-100 text-start">Logout</button>
+                    </form>
+                </li>                                          
             </ul>
         </div>
 
