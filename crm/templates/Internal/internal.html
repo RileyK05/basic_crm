@@ -12,28 +12,51 @@
             <tr>
                 <th>Metric</th>
                 <th>Value</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>Current Revenue</td>
                 <td>${{ current_revenue }}</td>
+                <td>
+                    <!-- Internal Services Edit Link -->
+                    <a href="{% url 'internal_services_edit' %}" class="btn btn-primary">Edit</a>
+                </td>
             </tr>
             <tr>
                 <td>Projected Revenue</td>
                 <td>${{ projected_revenue }}</td>
+                <td>
+                    <!-- Internal Services Edit Link -->
+                    <a href="{% url 'internal_services_edit' %}" class="btn btn-primary">Edit</a>
+                </td>
             </tr>
             <tr>
                 <td>Current Growth Rate</td>
                 <td>{{ growth_rate }}%</td>
+                <td>
+                    <!-- Internal Services Edit Link -->
+                    <a href="{% url 'internal_services_edit' %}" class="btn btn-primary">Edit</a>
+                </td>
             </tr>
             <tr>
                 <td>Churn Rate</td>
                 <td>{{ churn_rate }}%</td>
+                <td>
+                    <!-- Internal Services Edit Link -->
+                    <a href="{% url 'internal_services_edit' %}" class="btn btn-primary">Edit</a>
+                </td>
+            </tr>
+            <!-- New row for Lifetime Value -->
+            <tr>
+                <td>Lifetime Value</td>
+                <td>${{ lifetime_value }}</td>
+                <td>
+                    <a href="{% url 'lifetime_value_edit' %}" class="btn btn-primary">Edit</a>
+                </td>
             </tr>
         </tbody>
     </table>
-
-    <!-- You can add more internal statistics or graphs here as needed -->
 </div>
 {% endblock %}

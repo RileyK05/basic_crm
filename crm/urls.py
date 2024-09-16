@@ -6,7 +6,7 @@ from .views import (
     EngagementCreateView, EngagementDetailView, EngagementUpdateView, EngagementDeleteView,
     ProductsPurchasedCreateView, ProductsPurchasedUpdateView, ProductsPurchasedDeleteView,
     CreateUserView, InternalView, CustomerListView, LeadListView, ProductListView, EngagementListView,
-    signout_view, CustomLoginView
+    signout_view, CustomLoginView, InternalServicesEditView, LifetimeValueEditView
 )
 
 urlpatterns = [
@@ -15,7 +15,9 @@ urlpatterns = [
 
     # Internal
     path('internal/', InternalView.as_view(), name='internal'),
-    
+    path('internal/services/edit/', InternalServicesEditView.as_view(), name='internal_services_edit'),
+    path('internal/life-value/edit/', LifetimeValueEditView.as_view(), name='lifetime_value_edit'),
+
     # Dashboard
     path('dashboard/', DashboardView.as_view(), name='dashboard'),
 
