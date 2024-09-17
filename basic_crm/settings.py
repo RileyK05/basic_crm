@@ -26,8 +26,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "crm",  # Your custom CRM application
+    "crm",  
+    "widget_tweaks",  
 ]
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
