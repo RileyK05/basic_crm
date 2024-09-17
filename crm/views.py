@@ -6,10 +6,10 @@ from django.utils.timezone import now
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, F
 from django.utils import timezone
 from .models import (
-    CustomerInformation, Product, ProductsPurchased, CustomerLead, Engagement, LifetimeValue, InternalServices
+    CustomerInformation, Product, ProductsPurchased, CustomerLead, Engagement, LifetimeValue, InternalServices,
 )
 from .forms import CustomerForm, ProductForm, LeadForm, EngagementForm, CustomUserCreationForm
 
@@ -222,8 +222,6 @@ class LeadDetailView(DetailView):
 
         return context
 
-
-
 class LeadUpdateView(UpdateView):
     """ View to update lead details. """
     model = CustomerLead
@@ -233,17 +231,19 @@ class LeadUpdateView(UpdateView):
 
 
 class LeadDeleteView(DeleteView):
-    """ View to delete a lead. """
     model = CustomerLead
     template_name = 'Lead/lead_confirm_delete.html'
-    success_url = reverse_lazy('dashboard')
+    success_url = reverse_lazy('lead_list')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['lead'] = self.object 
+        return context
 
 # Product Views
 # -------------------------------------------------------
 
 class ProductListView(ListView):
-    """ View to list all products with search functionality. """
     model = Product
     template_name = 'Product/product_list.html'
     context_object_name = 'products'
@@ -251,9 +251,29 @@ class ProductListView(ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('product_search', '')
+        products = Product.objects.all()
         if query:
-            return Product.objects.filter(Q(name__icontains=query))
-        return Product.objects.all()
+            products = products.filter(name__icontains=query)
+
+        # Annotate products with total purchased and total revenue
+        products = products.annotate(
+            total_purchased=Sum('productspurchased__number_of_products_purchased'),
+            total_revenue=Sum('productspurchased__amount_spent')
+        )
+        return products
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Get product purchases for display
+        products_purchased = ProductsPurchased.objects.all()
+        purchases_page = self.request.GET.get('purchases_page')
+        purchases_paginator = self.get_paginator(products_purchased, self.paginate_by)
+        context['products_purchased'] = purchases_paginator.get_page(purchases_page)
+        context['is_paginated_purchases'] = purchases_paginator.num_pages > 1
+        context['page_obj_purchases'] = context['products_purchased']
+        
+        return context
 
 
 class ProductCreateView(CreateView):
