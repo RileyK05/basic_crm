@@ -1,8 +1,7 @@
-/* Sidebar styles */
 .sidebar {
     height: 100vh;
     position: fixed;
-    background-color: #7b55c8f5; /* Royal purple */
+    background-color: #7b55c8f5;
     padding: 20px;
     width: 220px;
 }
@@ -24,36 +23,32 @@
     text-decoration: none;
     width: 100%;
     text-align: left;
-    background: none; /* Remove default button background */
-    border: none; /* Remove default button border */
-    cursor: pointer; /* Ensure it looks clickable */
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
-/* Reset button appearance */
 .sidebar ul li button.sidebar-link {
-    -webkit-appearance: none; /* Remove button default styles */
+    -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
 }
 
-/* Hover effect for both links and the logout button */
 .sidebar ul li a:hover,
 .sidebar ul li button.sidebar-link:hover {
-    background-color: #9370db; /* Lighter purple for hover */
+    background-color: #9370db;
     color: white;
     cursor: pointer;
 }
 
-/* Main content styles */
 .main-content {
-    margin-left: 240px; /* Adjust this based on sidebar width */
+    margin-left: 240px;
     padding: 20px;
-    color: #ccc;  /* Your requested color */
+    color: #ccc;
     border-radius: 8px;
-    min-height: 100vh; /* Ensures full height coverage */
+    min-height: 100vh;
 }
 
-/* Fixing the navbar to span the entire width */
 .navbar {
     width: 100%;
 }
@@ -62,9 +57,8 @@
     font-size: 1.5rem;
 }
 
-/* Footer styles */
 footer {
-    background-color: #9370db; /* Royal purple footer */
+    background-color: #9370db;
     color: white;
 }
 
@@ -76,7 +70,6 @@ footer a:hover {
     text-decoration: underline;
 }
 
-/* Sticky footer */
 html, body {
     height: 100%;
 }
@@ -89,4 +82,16 @@ body {
 footer {
     margin-top: auto;
     padding: 20px 0;
+}
+
+.lead-form .form-control {
+    max-width: 600px;
+}
+
+.lead-form small.form-text {
+    color: #6c757d;
+}
+
+.container {
+    max-width: 800px;
 }

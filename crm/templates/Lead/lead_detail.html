@@ -7,16 +7,32 @@
     <h1>Lead Details</h1>
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">{{ lead.name }}</h5>
-            <p class="card-text">
-                <strong>Email:</strong> {{ lead.email }}<br>
-                <strong>Phone:</strong> {{ lead.phone_number }}<br>
-                <strong>Company:</strong> {{ lead.company }}<br>
-                <strong>Status:</strong> {{ lead.status }}<br>
-                <strong>Created At:</strong> {{ lead.created_at|date:"F d, Y" }}<br>
-                <strong>Last Updated:</strong> {{ lead.updated_at|date:"F d, Y" }}<br>
-                <strong>Notes:</strong> {{ lead.notes }}
-            </p>
+            {% if lead.customer %}
+                <!-- Display customer information if lead is associated with a customer -->
+                <h5 class="card-title">{{ lead.customer.name }}</h5>
+                <p class="card-text">
+                    <strong>Email:</strong> {{ lead.customer.email|default:"N/A" }}<br>
+                    <strong>Phone:</strong> {{ lead.customer.phone|default:"N/A" }}<br>
+                    <strong>Company:</strong> {{ lead.customer.company|default:"N/A" }}<br>
+                    <strong>Industry:</strong> {{ lead.customer.industry|default:"N/A" }}<br>
+                    <strong>Status:</strong> {{ lead.status|default:"N/A" }}<br>
+                    <strong>Created At:</strong> {{ lead.created_at|date:"F d, Y" }}<br>
+                    <strong>Last Updated:</strong> {{ lead.updated_at|date:"F d, Y" }}<br>
+                    <strong>Notes:</strong> {{ lead.notes|default:"N/A" }}
+                </p>
+            {% else %}
+                <!-- Display lead information if not associated with a customer -->
+                <h5 class="card-title">{{ lead.name|default:"N/A" }}</h5>
+                <p class="card-text">
+                    <strong>Email:</strong> {{ lead.email|default:"N/A" }}<br>
+                    <strong>Phone:</strong> {{ lead.phone_number|default:"N/A" }}<br>
+                    <strong>Company:</strong> {{ lead.company|default:"N/A" }}<br>
+                    <strong>Status:</strong> {{ lead.status|default:"N/A" }}<br>
+                    <strong>Created At:</strong> {{ lead.created_at|date:"F d, Y" }}<br>
+                    <strong>Last Updated:</strong> {{ lead.updated_at|date:"F d, Y" }}<br>
+                    <strong>Notes:</strong> {{ lead.notes|default:"N/A" }}
+                </p>
+            {% endif %}
             <a href="{% url 'lead_edit' lead.pk %}" class="btn btn-primary">Edit Lead</a>
             <a href="{% url 'lead_delete' lead.pk %}" class="btn btn-danger">Delete Lead</a>
         </div>

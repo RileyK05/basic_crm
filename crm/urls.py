@@ -6,7 +6,7 @@ from .views import (
     EngagementCreateView, EngagementDetailView, EngagementUpdateView, EngagementDeleteView,
     ProductsPurchasedCreateView, ProductsPurchasedUpdateView, ProductsPurchasedDeleteView,
     CreateUserView, InternalView, CustomerListView, LeadListView, ProductListView, EngagementListView,
-    signout_view, CustomLoginView, InternalServicesEditView, LifetimeValueEditView
+    signout_view, CustomLoginView, InternalServicesEditView, LifetimeValueEditView, customer_autocomplete
 )
 
 urlpatterns = [
@@ -27,6 +27,8 @@ urlpatterns = [
     path('customer/<int:pk>/', CustomerDetailView.as_view(), name='customer_detail'),
     path('customer/<int:pk>/edit/', CustomerUpdateView.as_view(), name='customer_edit'),
     path('customer/<int:pk>/delete/', CustomerDeleteView.as_view(), name='customer_delete'),
+    path('customer-autocomplete/', customer_autocomplete, name='customer-autocomplete'),
+
 
     # Product management
     path('products/', ProductListView.as_view(), name='product_list'),  

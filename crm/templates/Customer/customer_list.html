@@ -11,6 +11,11 @@
         <input type="text" name="customer_search" placeholder="Search Customers" class="form-control mb-3" value="{{ request.GET.customer_search }}">
     </form>
 
+    <!-- Add Customer Button -->
+    <div class="mb-3">
+        <a href="{% url 'customer_add' %}" class="btn btn-success">Add Customer</a>
+    </div>
+
     <!-- Customers Table -->
     <table class="table table-bordered">
         <thead>

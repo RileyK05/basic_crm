@@ -1,17 +1,117 @@
 {% extends 'base_generic.html' %}
+{% load custom_filters %}  <!-- Add this line to load your custom filter -->
 
 {% block title %}Add New Lead{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h1>Add a New Lead</h1>
+    <h1 class="mb-4">Add a New Lead</h1>
     
-    <form method="post">
+    <form method="post" class="lead-form">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form.non_field_errors }}
+
+        <!-- Checkbox to create a new lead without a customer -->
+        <div class="form-check mb-3">
+            {{ form.new_lead_without_customer }}
+            {{ form.new_lead_without_customer.label_tag }}
+        </div>
+
+        <!-- Customer field with autocomplete -->
+        <div class="form-group mb-3">
+            {{ form.customer.label_tag }}
+            <input type="text" id="customer-autocomplete" class="form-control" placeholder="Search for a customer">
+            <input type="hidden" id="id_customer" name="customer"> <!-- Hidden input to store the selected customer ID -->
+            <small class="form-text text-muted">Search for an existing customer (optional).</small>
+        </div>
+
+        <!-- Name field -->
+        <div class="form-group mb-3">
+            {{ form.name.label_tag }}
+            {{ form.name|add_class:"form-control" }}
+            <small class="form-text text-muted">Provide a name for the lead if no customer is selected.</small>
+        </div>
+
+        <!-- Other fields -->
+        <div class="form-group mb-3">
+            {{ form.email.label_tag }}
+            {{ form.email|add_class:"form-control" }}
+        </div>
         
+        <div class="form-group mb-3">
+            {{ form.phone.label_tag }}
+            {{ form.phone|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form.company.label_tag }}
+            {{ form.company|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form.status.label_tag }}
+            {{ form.status|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form.likelihood_to_convert.label_tag }}
+            {{ form.likelihood_to_convert|add_class:"form-control" }}
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form.lead_stage.label_tag }}
+            {{ form.lead_stage|add_class:"form-control" }}
+        </div>
+
+        <!-- Form buttons -->
         <button type="submit" class="btn btn-primary">Add Lead</button>
         <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
+
+<!-- Include jQuery and jQuery UI for autocomplete -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<script>
+    // JavaScript to toggle the customer field based on the checkbox status
+    document.addEventListener('DOMContentLoaded', function () {
+        const newLeadCheckbox = document.querySelector('#id_new_lead_without_customer');
+        const customerField = document.querySelector('#id_customer');
+        const customerAutocomplete = document.querySelector('#customer-autocomplete');
+
+        function toggleCustomerField() {
+            if (newLeadCheckbox.checked) {
+                customerAutocomplete.disabled = true;
+                customerAutocomplete.value = '';  // Clear the value if checked
+                customerField.value = '';  // Clear the hidden input
+            } else {
+                customerAutocomplete.disabled = false;
+            }
+        }
+
+        // Initial toggle on page load
+        toggleCustomerField();
+
+        // Add event listener for changes in the checkbox
+        newLeadCheckbox.addEventListener('change', toggleCustomerField);
+
+        // Autocomplete for customer field
+        $("#customer-autocomplete").autocomplete({
+            source: "{% url 'customer-autocomplete' %}", // URL for the autocomplete view
+            minLength: 2,
+            select: function(event, ui) {
+                // Set hidden input value and display selected customer name
+                $('#id_customer').val(ui.item.id);
+                $('#customer-autocomplete').val(ui.item.name);
+                return false; // Prevent the default action of setting the text input
+            }
+        }).autocomplete("instance")._renderItem = function(ul, item) {
+            return $("<li>")
+                .append("<div>" + item.name + " (" + item.email + ")</div>")
+                .appendTo(ul);
+        };
+    });
+</script>
 {% endblock %}

@@ -11,6 +11,11 @@
         <input type="text" name="lead_search" placeholder="Search Leads" class="form-control mb-3" value="{{ request.GET.lead_search }}">
     </form>
 
+    <!-- Add Lead Button -->
+    <div class="mb-3">
+        <a href="{% url 'lead_add' %}" class="btn btn-success">Add Lead</a>
+    </div>
+
     <!-- Leads Table -->
     <table class="table table-bordered">
         <thead>
@@ -23,7 +28,13 @@
         <tbody>
             {% for lead in leads %}
                 <tr>
-                    <td><a href="{% url 'customer_detail' lead.customer.pk %}">{{ lead.customer.name }}</a></td>
+                    <td>
+                        {% if lead.customer %}
+                            <a href="{% url 'customer_detail' lead.customer.pk %}">{{ lead.customer.name }}</a>
+                        {% else %}
+                            No Customer
+                        {% endif %}
+                    </td>
                     <td><a href="{% url 'lead_detail' lead.pk %}">{{ lead.status }}</a></td>
                     <td>{{ lead.likelihood_to_convert }}%</td>
                 </tr>

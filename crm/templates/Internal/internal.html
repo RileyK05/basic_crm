@@ -20,7 +20,6 @@
                 <td>Current Revenue</td>
                 <td>${{ current_revenue }}</td>
                 <td>
-                    <!-- Internal Services Edit Link -->
                     <a href="{% url 'internal_services_edit' %}" class="btn btn-primary">Edit</a>
                 </td>
             </tr>
@@ -28,30 +27,75 @@
                 <td>Projected Revenue</td>
                 <td>${{ projected_revenue }}</td>
                 <td>
-                    <!-- Internal Services Edit Link -->
+                    <a href="{% url 'internal_services_edit' %}" class="btn btn-primary">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Past Growth Rate</td>
+                <td>{{ past_growth_rate }}%</td>
+                <td>
                     <a href="{% url 'internal_services_edit' %}" class="btn btn-primary">Edit</a>
                 </td>
             </tr>
             <tr>
                 <td>Current Growth Rate</td>
-                <td>{{ growth_rate }}%</td>
+                <td>{{ current_growth_rate }}%</td>
                 <td>
-                    <!-- Internal Services Edit Link -->
                     <a href="{% url 'internal_services_edit' %}" class="btn btn-primary">Edit</a>
                 </td>
             </tr>
             <tr>
-                <td>Churn Rate</td>
-                <td>{{ churn_rate }}%</td>
+                <td>Projected Growth</td>
+                <td>{{ projected_growth }}%</td>
                 <td>
-                    <!-- Internal Services Edit Link -->
                     <a href="{% url 'internal_services_edit' %}" class="btn btn-primary">Edit</a>
                 </td>
             </tr>
-            <!-- New row for Lifetime Value -->
             <tr>
-                <td>Lifetime Value</td>
-                <td>${{ lifetime_value }}</td>
+                <td>Total Customers</td>
+                <td>{{ total_customers }}</td>
+                <td>
+                    <a href="{% url 'internal_services_edit' %}" class="btn btn-primary">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Average Length of Customer</td>
+                <td>{{ average_length_of_customer }} years</td>
+                <td>
+                    <a href="{% url 'internal_services_edit' %}" class="btn btn-primary">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Internal Churn Rate</td>
+                <td>{{ internal_churn_rate }}%</td>
+                <td>
+                    <a href="{% url 'internal_services_edit' %}" class="btn btn-primary">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Average Cost to Acquire</td>
+                <td>${{ average_cost_to_acquire }}</td>
+                <td>
+                    <a href="{% url 'internal_services_edit' %}" class="btn btn-primary">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Average Revenue Per Customer</td>
+                <td>${{ average_revenue_per_customer }}</td>
+                <td>
+                    <a href="{% url 'internal_services_edit' %}" class="btn btn-primary">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Industry Growth Rate</td>
+                <td>{{ industry_growth_rate }}%</td>
+                <td>
+                    <a href="{% url 'internal_services_edit' %}" class="btn btn-primary">Edit</a>
+                </td>
+            </tr>
+            <tr>
+                <td>Average Lifetime Value</td>
+                <td>${{ average_lifetime_value }}</td>
                 <td>
                     <a href="{% url 'lifetime_value_edit' %}" class="btn btn-primary">Edit</a>
                 </td>
