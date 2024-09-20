@@ -1,7 +1,7 @@
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.timezone import now
 from django.http import JsonResponse
 from django.urls import reverse_lazy
@@ -11,7 +11,7 @@ from django.utils import timezone
 from .models import (
     CustomerInformation, Product, ProductsPurchased, CustomerLead, Engagement, LifetimeValue, InternalServices,
 )
-from .forms import CustomerForm, ProductForm, LeadForm, EngagementForm, CustomUserCreationForm
+from .forms import CustomerForm, ProductForm, LeadForm, EngagementForm, CustomUserCreationForm, InternalServiceMetricForm
 
 
 
@@ -411,19 +411,30 @@ class InternalView(TemplateView):
 
 
 class InternalServicesEditView(UpdateView):
-    """ View to edit internal services data. """
     model = InternalServices
     template_name = 'Internal/internal_services_edit.html'
-    fields = [
-        'current_revenue', 'projected_revenue', 'past_growth_rate', 'current_growth_rate',
-        'projected_growth', 'total_customers', 'average_length_of_customer', 'internal_churn_rate',
-        'average_cost_to_acquire', 'average_revenue_per_customer', 'industry_growth_rate'
-    ]
+    form_class = InternalServiceMetricForm
     success_url = reverse_lazy('internal')
 
     def get_object(self, queryset=None):
-        internal_services, created = InternalServices.objects.get_or_create()
-        return internal_services
+        # Fetch the first or only InternalServices object
+        return get_object_or_404(InternalServices)
+
+    def get_initial(self):
+        """ Pre-fill the form with the value of the selected metric. """
+        metric = self.kwargs['metric']  # Use the 'metric' from the URL
+        initial = super().get_initial()
+        internal_services = self.get_object()
+        initial['value'] = getattr(internal_services, metric, None)  # Set the form's initial value based on the metric
+        return initial
+
+    def form_valid(self, form):
+        """ Save the specific metric in the InternalServices model. """
+        metric = self.kwargs['metric']
+        internal_services = self.get_object()
+        setattr(internal_services, metric, form.cleaned_data['value'])  # Update only the specific field
+        internal_services.save()
+        return redirect(self.success_url)
 
 
 class LifetimeValueEditView(UpdateView):

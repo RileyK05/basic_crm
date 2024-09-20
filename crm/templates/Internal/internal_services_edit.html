@@ -1,10 +1,10 @@
 {% extends 'base_generic.html' %}
 
-{% block title %}Edit Internal Services{% endblock %}
+{% block title %}Edit Metric{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Edit Internal Services</h2>
+    <h2>Edit {{ view.kwargs.metric|title }}</h2>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}

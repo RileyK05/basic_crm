@@ -15,7 +15,7 @@ urlpatterns = [
 
     # Internal
     path('internal/', InternalView.as_view(), name='internal'),
-    path('internal/services/edit/', InternalServicesEditView.as_view(), name='internal_services_edit'),
+    path('internal/edit/<str:metric>/', InternalServicesEditView.as_view(), name='internal_services_edit'),
     path('internal/life-value/edit/', LifetimeValueEditView.as_view(), name='lifetime_value_edit'),
 
     # Dashboard
@@ -28,7 +28,6 @@ urlpatterns = [
     path('customer/<int:pk>/edit/', CustomerUpdateView.as_view(), name='customer_edit'),
     path('customer/<int:pk>/delete/', CustomerDeleteView.as_view(), name='customer_delete'),
     path('customer-autocomplete/', customer_autocomplete, name='customer-autocomplete'),
-
 
     # Product management
     path('products/', ProductListView.as_view(), name='product_list'),  
