@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import inlineformset_factory
-from .models import CustomerInformation, Product, CustomerLead, Engagement, InternalServices, User, CustomDescriptionField
+from .models import CustomerInformation, Product, CustomerLead, Engagement, InternalServices, User, CustomDescriptionField, ProductsPurchased
 
 # -------------------------------------------
 # User Forms
@@ -12,6 +12,13 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
+
+
+class EditUserForm(forms.ModelForm):
+    """Custom form to update the user's profile information."""
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
 
 
 # -------------------------------------------
@@ -104,6 +111,16 @@ class InternalServiceMetricForm(forms.ModelForm):
     class Meta:
         model = InternalServices
         fields = []  # Dynamically handle fields in the view logic.
+
+# -------------------------------------------
+# Products Purchased Forms
+# -------------------------------------------
+
+class ProductsPurchasedForm(forms.ModelForm):
+    """Form for managing products purchased."""
+    class Meta:
+        model = ProductsPurchased
+        fields = ['customer', 'product', 'number_of_products_purchased', 'date_of_sale', 'amount_spent']
 
 
 # -------------------------------------------

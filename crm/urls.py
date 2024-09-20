@@ -6,7 +6,8 @@ from .views import (
     EngagementCreateView, EngagementDetailView, EngagementUpdateView, EngagementDeleteView,
     ProductsPurchasedCreateView, ProductsPurchasedUpdateView, ProductsPurchasedDeleteView,
     CreateUserView, InternalView, CustomerListView, LeadListView, ProductListView, EngagementListView,
-    signout_view, CustomLoginView, InternalServicesEditView, LifetimeValueEditView, customer_autocomplete
+    signout_view, CustomLoginView, InternalServicesEditView, LifetimeValueEditView, customer_autocomplete,
+    ViewAccountView, EditAccountView, ProductsPurchasedDetailView
 )
 
 urlpatterns = [
@@ -27,7 +28,7 @@ urlpatterns = [
     path('customer/<int:pk>/', CustomerDetailView.as_view(), name='customer_detail'),
     path('customer/<int:pk>/edit/', CustomerUpdateView.as_view(), name='customer_edit'),
     path('customer/<int:pk>/delete/', CustomerDeleteView.as_view(), name='customer_delete'),
-    path('customer-autocomplete/', customer_autocomplete, name='customer-autocomplete'),
+    path('customer-autocomplete/', customer_autocomplete, name='customer_autocomplete'),
 
     # Product management
     path('products/', ProductListView.as_view(), name='product_list'),  
@@ -54,10 +55,13 @@ urlpatterns = [
     path('products-purchased/add/', ProductsPurchasedCreateView.as_view(), name='products_purchased_add'),
     path('products-purchased/<int:pk>/edit/', ProductsPurchasedUpdateView.as_view(), name='products_purchased_edit'),
     path('products-purchased/<int:pk>/delete/', ProductsPurchasedDeleteView.as_view(), name='products_purchased_delete'),
+    path('products-purchased/<int:pk>/', ProductsPurchasedDetailView.as_view(), name='products_purchased_detail'),
     
     # Accounts
     path('accounts/login/', CustomLoginView.as_view(), name='login'), 
     path('accounts/logout/', signout_view, name='logout'), 
     path('accounts/', include('django.contrib.auth.urls')),  
     path('signup/', CreateUserView.as_view(), name='signup'),  
+    path('account/', ViewAccountView.as_view(), name='view_account'),
+    path('account/edit/', EditAccountView.as_view(), name='edit_account'),
 ]

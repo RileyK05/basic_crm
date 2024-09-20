@@ -13,7 +13,6 @@
         <div class="card-body">
             <p><strong>Description:</strong> {{ product.description }}</p>
             <p><strong>Price:</strong> ${{ product.price }}</p>
-            <p><strong>Stock:</strong> {{ product.stock }}</p>
         </div>
         <div class="card-footer">
             <a href="{% url 'product_edit' product.pk %}" class="btn btn-primary">Edit Product</a>

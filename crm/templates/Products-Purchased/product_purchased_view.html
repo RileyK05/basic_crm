@@ -1,0 +1,34 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Product Purchase Details{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Product Purchase Details</h1>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Customer</th>
+            <td>{{ purchase.customer.name }}</td>
+        </tr>
+        <tr>
+            <th>Product</th>
+            <td>{{ purchase.product.name }}</td>
+        </tr>
+        <tr>
+            <th>Number of Products Purchased</th>
+            <td>{{ purchase.number_of_products_purchased }}</td>
+        </tr>
+        <tr>
+            <th>Date of Sale</th>
+            <td>{{ purchase.date_of_sale }}</td>
+        </tr>
+        <tr>
+            <th>Amount Spent</th>
+            <td>${{ purchase.amount_spent }}</td>
+        </tr>
+    </table>
+
+    <a href="{% url 'products_purchased_view' %}" class="btn btn-secondary">Back to Purchases</a>
+</div>
+{% endblock %}

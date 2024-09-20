@@ -1,0 +1,29 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Account Details{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Account Details</h2>
+    <div class="card">
+        <div class="card-header">
+            <strong>{{ user.username }}</strong>
+        </div>
+        <div class="card-body">
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>First Name:</strong> {{ user.first_name }}</p>
+            <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <!-- Edit Account Button -->
+        <a href="{% url 'edit_account' %}" class="btn btn-primary">Edit Account</a>
+
+        <!-- Change Password Button (updated to purple) -->
+        <a href="{% url 'password_change' %}" class="btn btn-purple">Change Password</a>
+
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

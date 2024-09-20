@@ -15,6 +15,12 @@
     padding: 0;
 }
 
+.btn-purple {
+    background-color: #6f42c1;
+    color: white;
+}
+
+
 .sidebar ul li a,
 .sidebar ul li button.sidebar-link {
     display: block;

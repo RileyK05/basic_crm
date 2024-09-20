@@ -1,21 +1,21 @@
 from django.contrib.auth import login, logout
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import AuthenticationForm, UserChangeForm
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.timezone import now
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
-from django.db.models import Sum, Q, F
-from django.utils import timezone
+from django.db.models import Sum, Q
 from .models import (
-    CustomerInformation, Product, ProductsPurchased, CustomerLead, Engagement, LifetimeValue, InternalServices,
+    CustomerInformation, Product, ProductsPurchased, CustomerLead, Engagement, LifetimeValue, InternalServices
 )
 from .forms import (
     CustomerForm, ProductForm, LeadForm, EngagementForm, CustomUserCreationForm, 
-    InternalServiceMetricForm, CustomDescriptionFormSet
-    )
-
+    InternalServiceMetricForm, CustomDescriptionFormSet, ProductsPurchasedForm
+)
 
 
 # General Views
@@ -115,17 +115,30 @@ def signout_view(request):
     return redirect('index')
 
 
+class EditAccountView(LoginRequiredMixin, UpdateView):
+    """ View for editing the user's account information. """
+    model = User
+    form_class = UserChangeForm
+    template_name = 'accounts/edit_account.html'
+    success_url = reverse_lazy('view_account')
+
+    def get_object(self):
+        """Override get_object to return the current user."""
+        return self.request.user
+
+
+class ViewAccountView(LoginRequiredMixin, TemplateView):
+    """ View to display the current user's account information. """
+    template_name = 'accounts/view_account.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
+
+
 # Customer Views
 # -------------------------------------------------------
-
-def customer_autocomplete(request):
-    """View to handle customer autocomplete search."""
-    if 'term' in request.GET:
-        qs = CustomerInformation.objects.filter(name__icontains=request.GET.get('term'))[:10]
-        customers = list(qs.values('id', 'name', 'email'))
-        return JsonResponse(customers, safe=False)
-    return JsonResponse([], safe=False)
-
 
 class CustomerListView(ListView):
     """ View to list all customers with search functionality. """
@@ -171,7 +184,6 @@ class CustomerCreateView(CreateView):
             return self.form_invalid(form)
 
 
-
 class CustomerDetailView(DetailView):
     """ View to display customer details. """
     model = CustomerInformation
@@ -194,6 +206,33 @@ class CustomerUpdateView(UpdateView):
     form_class = CustomerForm
     template_name = 'Customer/customer_edit.html'
     success_url = reverse_lazy('dashboard')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = CustomDescriptionFormSet(self.request.POST, instance=self.object)
+        else:
+            context['formset'] = CustomDescriptionFormSet(instance=self.object)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        if form.is_valid() and formset.is_valid():
+            customer = form.save()
+            formset.instance = customer
+            formset.save()
+            return super().form_valid(form)
+        else:
+            return self.form_invalid(form)
+          
+def customer_autocomplete(request):
+    """View to handle customer autocomplete search."""
+    if 'term' in request.GET:
+        qs = CustomerInformation.objects.filter(name__icontains=request.GET.get('term'))[:10]
+        customers = list(qs.values('id', 'name', 'email'))
+        return JsonResponse(customers, safe=False)
+    return JsonResponse([], safe=False)
 
 
 class CustomerDeleteView(DeleteView):
@@ -231,8 +270,9 @@ class LeadCreateView(CreateView):
     template_name = 'Lead/lead_add.html'
     success_url = reverse_lazy('dashboard')
 
+
 class LeadDetailView(DetailView):
-    """View to display lead details."""
+    """ View to display lead details. """
     model = CustomerLead
     template_name = 'Lead/lead_detail.html'
     context_object_name = 'lead'
@@ -241,8 +281,8 @@ class LeadDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         lead = self.object
         context['total_time_in_pipeline'] = (now().date() - lead.created_at.date()).days
-
         return context
+
 
 class LeadUpdateView(UpdateView):
     """ View to update lead details. """
@@ -253,14 +293,11 @@ class LeadUpdateView(UpdateView):
 
 
 class LeadDeleteView(DeleteView):
+    """ View to delete a lead. """
     model = CustomerLead
     template_name = 'Lead/lead_confirm_delete.html'
     success_url = reverse_lazy('lead_list')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['lead'] = self.object 
-        return context
 
 # Product Views
 # -------------------------------------------------------
@@ -276,8 +313,6 @@ class ProductListView(ListView):
         products = Product.objects.all()
         if query:
             products = products.filter(name__icontains=query)
-
-        # Annotate products with total purchased and total revenue
         products = products.annotate(
             total_purchased=Sum('productspurchased__number_of_products_purchased'),
             total_revenue=Sum('productspurchased__amount_spent')
@@ -286,15 +321,12 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        # Get product purchases for display
         products_purchased = ProductsPurchased.objects.all()
         purchases_page = self.request.GET.get('purchases_page')
         purchases_paginator = self.get_paginator(products_purchased, self.paginate_by)
         context['products_purchased'] = purchases_paginator.get_page(purchases_page)
         context['is_paginated_purchases'] = purchases_paginator.num_pages > 1
         context['page_obj_purchases'] = context['products_purchased']
-        
         return context
 
 
@@ -395,7 +427,6 @@ class InternalView(TemplateView):
         context = super().get_context_data(**kwargs)
         internal_services = InternalServices.objects.first()
 
-        # Set context variables for all the internal service metrics
         if internal_services:
             context.update({
                 'current_revenue': internal_services.current_revenue,
@@ -413,7 +444,6 @@ class InternalView(TemplateView):
                 'average_lifetime_value_id': internal_services.id
             })
         else:
-            # Default values if no InternalServices object exists
             context.update({
                 'current_revenue': "N/A",
                 'projected_revenue': "N/A",
@@ -439,22 +469,21 @@ class InternalServicesEditView(UpdateView):
     success_url = reverse_lazy('internal')
 
     def get_object(self, queryset=None):
-        # Fetch the first or only InternalServices object
         return get_object_or_404(InternalServices)
 
     def get_initial(self):
         """ Pre-fill the form with the value of the selected metric. """
-        metric = self.kwargs['metric']  # Use the 'metric' from the URL
+        metric = self.kwargs['metric']
         initial = super().get_initial()
         internal_services = self.get_object()
-        initial['value'] = getattr(internal_services, metric, None)  # Set the form's initial value based on the metric
+        initial['value'] = getattr(internal_services, metric, None)
         return initial
 
     def form_valid(self, form):
         """ Save the specific metric in the InternalServices model. """
         metric = self.kwargs['metric']
         internal_services = self.get_object()
-        setattr(internal_services, metric, form.cleaned_data['value'])  # Update only the specific field
+        setattr(internal_services, metric, form.cleaned_data['value'])
         internal_services.save()
         return redirect(self.success_url)
 
@@ -463,8 +492,8 @@ class LifetimeValueEditView(UpdateView):
     """ View to edit average lifetime value. """
     model = InternalServices
     template_name = 'Internal/lifetime_value_edit.html'
-    fields = ['average_lifetime_value'] 
-    success_url = reverse_lazy('internal') 
+    fields = ['average_lifetime_value']
+    success_url = reverse_lazy('internal')
 
     def get_object(self, queryset=None):
         internal_services = InternalServices.objects.first()
@@ -495,5 +524,12 @@ class ProductsPurchasedUpdateView(UpdateView):
 class ProductsPurchasedDeleteView(DeleteView):
     """ View to delete a product purchase record. """
     model = ProductsPurchased
-    template_name = 'Products-Purchased/products_purchased_confirm_delete.html'
+    template_name = 'Products-Purchased/products_purchased_delete.html'
     success_url = reverse_lazy('dashboard')
+    
+    
+class ProductsPurchasedDetailView(DetailView):
+    """View to display the details of a single product purchase."""
+    model = ProductsPurchased
+    template_name = 'Products-Purchased/product_purchased_view.html'
+    context_object_name = 'purchase'

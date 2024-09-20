@@ -11,6 +11,11 @@
         <input type="text" name="engagement_search" placeholder="Search Engagements" class="form-control mb-3" value="{{ request.GET.engagement_search }}">
     </form>
 
+    <!-- Add Engagement Button -->
+    <div class="mb-3">
+        <a href="{% url 'engagement_add' %}" class="btn btn-primary">Add Engagement</a>
+    </div>
+
     <!-- Engagements Table -->
     <table class="table table-bordered">
         <thead>

@@ -1,14 +1,52 @@
 {% extends 'base_generic.html' %}
+{% load widget_tweaks %}
 
 {% block title %}Edit Purchased Product{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h1>Edit Purchased Product</h1>
+    <h1 class="mb-4">Edit Purchased Product</h1>
 
-    <form method="post">
+    <form method="post" class="product-purchased-form">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form.non_field_errors }}
+
+        <!-- Customer Field -->
+        <div class="form-group mb-3">
+            {{ form.customer.label_tag }}
+            {{ form.customer|add_class:"form-control" }}
+            <small class="form-text text-muted">Select the customer who purchased the product.</small>
+        </div>
+
+        <!-- Product Field -->
+        <div class="form-group mb-3">
+            {{ form.product.label_tag }}
+            {{ form.product|add_class:"form-control" }}
+            <small class="form-text text-muted">Choose the product that was purchased.</small>
+        </div>
+
+        <!-- Number of Products Purchased -->
+        <div class="form-group mb-3">
+            {{ form.number_of_products_purchased.label_tag }}
+            {{ form.number_of_products_purchased|add_class:"form-control" }}
+            <small class="form-text text-muted">Enter the number of products purchased.</small>
+        </div>
+
+        <!-- Date of Sale -->
+        <div class="form-group mb-3">
+            {{ form.date_of_sale.label_tag }}
+            {{ form.date_of_sale|add_class:"form-control" }}
+            <small class="form-text text-muted">Specify the date of the sale.</small>
+        </div>
+
+        <!-- Amount Spent -->
+        <div class="form-group mb-3">
+            {{ form.amount_spent.label_tag }}
+            {{ form.amount_spent|add_class:"form-control" }}
+            <small class="form-text text-muted">Enter the total amount spent on the product.</small>
+        </div>
+
+        <!-- Form Buttons -->
         <button type="submit" class="btn btn-primary">Save Changes</button>
         <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
     </form>

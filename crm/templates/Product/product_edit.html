@@ -1,14 +1,38 @@
 {% extends 'base_generic.html' %}
+{% load widget_tweaks %}
 
 {% block title %}Edit Product: {{ product.name }}{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h1>Edit Product</h1>
+    <h1 class="mb-4">Edit Product: {{ product.name }}</h1>
 
-    <form method="post">
+    <form method="post" class="product-form">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form.non_field_errors }}
+
+        <!-- Product Name -->
+        <div class="form-group mb-3">
+            {{ form.name.label_tag }}
+            {{ form.name|add_class:"form-control" }}
+            <small class="form-text text-muted">Update the name of the product.</small>
+        </div>
+
+        <!-- Product Description -->
+        <div class="form-group mb-3">
+            {{ form.description.label_tag }}
+            {{ form.description|add_class:"form-control" }}
+            <small class="form-text text-muted">Update the product description.</small>
+        </div>
+
+        <!-- Product Price -->
+        <div class="form-group mb-3">
+            {{ form.price.label_tag }}
+            {{ form.price|add_class:"form-control" }}
+            <small class="form-text text-muted">Specify the price of the product (in USD).</small>
+        </div>
+
+        <!-- Form Buttons -->
         <button type="submit" class="btn btn-primary">Save Changes</button>
         <a href="{% url 'product_detail' product.pk %}" class="btn btn-secondary">Cancel</a>
     </form>

@@ -1,13 +1,71 @@
 {% extends 'base_generic.html' %}
+{% load widget_tweaks %}
 
-{% block title %}Edit Customer{% endblock %}
+{% block title %}Edit Customer: {{ object.name }}{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Edit Customer: {{ object.name }}</h2>
-    <form method="post">
+    <h1 class="mb-4">Edit Customer: {{ object.name }}</h1>
+    
+    <form method="post" class="customer-form">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form.non_field_errors }}
+
+        <!-- Customer Information Fields -->
+        <div class="form-group mb-3">
+            {{ form.name.label_tag }}
+            {{ form.name|add_class:"form-control" }}
+            <small class="form-text text-muted">Enter the full name of the customer.</small>
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form.email.label_tag }}
+            {{ form.email|add_class:"form-control" }}
+            <small class="form-text text-muted">Provide a valid email address.</small>
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form.phone.label_tag }}
+            {{ form.phone|add_class:"form-control" }}
+            <small class="form-text text-muted">Enter the customer's phone number (optional).</small>
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form.industry.label_tag }}
+            {{ form.industry|add_class:"form-control" }}
+            <small class="form-text text-muted">Specify the customer's industry (optional).</small>
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form.company.label_tag }}
+            {{ form.company|add_class:"form-control" }}
+            <small class="form-text text-muted">Enter the company name (optional).</small>
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form.education.label_tag }}
+            {{ form.education|add_class:"form-control" }}
+            <small class="form-text text-muted">Enter the customer's education level (optional).</small>
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form.income.label_tag }}
+            {{ form.income|add_class:"form-control" }}
+            <small class="form-text text-muted">Specify the customer's income (optional).</small>
+        </div>
+
+        <!-- Custom Description Field -->
+        <h3 class="mt-4">Custom Description</h3>
+        {{ formset.management_form }}
+        {% for formset_form in formset %}
+            <div class="form-group mb-3">
+                {{ formset_form.description.label_tag }}
+                {{ formset_form.description|add_class:"form-control" }}
+                <small class="form-text text-muted">Provide additional details for this customer.</small>
+            </div>
+        {% endfor %}
+
+        <!-- Form Buttons -->
         <button type="submit" class="btn btn-primary">Save Changes</button>
         <a href="{% url 'customer_detail' object.id %}" class="btn btn-secondary">Cancel</a>
     </form>

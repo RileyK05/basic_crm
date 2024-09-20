@@ -76,6 +76,7 @@
                 <th>Quantity</th>
                 <th>Date of Sale</th>
                 <th>Amount Spent</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -86,10 +87,14 @@
                     <td>{{ purchase.number_of_products_purchased }}</td>
                     <td>{{ purchase.date_of_sale }}</td>
                     <td>${{ purchase.amount_spent }}</td>
+                    <td>
+                        <!-- Link to view details of the individual purchase -->
+                        <a href="{% url 'products_purchased_detail' purchase.pk %}" class="btn btn-info btn-sm">View</a>
+                    </td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="5">No product purchases found.</td>
+                    <td colspan="6">No product purchases found.</td>
                 </tr>
             {% endfor %}
         </tbody>

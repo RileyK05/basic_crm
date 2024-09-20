@@ -1,13 +1,38 @@
 {% extends 'base_generic.html' %}
+{% load widget_tweaks %}
 
 {% block title %}Edit Account{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Edit Account</h2>
-    <form method="post">
+    <h1 class="mb-4">Edit Account</h1>
+
+    <form method="post" class="account-form">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form.non_field_errors }}
+        
+        <!-- First Name Field -->
+        <div class="form-group mb-3">
+            {{ form.first_name.label_tag }}
+            {{ form.first_name|add_class:"form-control" }}
+            <small class="form-text text-muted">Update your first name.</small>
+        </div>
+
+        <!-- Last Name Field -->
+        <div class="form-group mb-3">
+            {{ form.last_name.label_tag }}
+            {{ form.last_name|add_class:"form-control" }}
+            <small class="form-text text-muted">Update your last name.</small>
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group mb-3">
+            {{ form.email.label_tag }}
+            {{ form.email|add_class:"form-control" }}
+            <small class="form-text text-muted">Update your email address.</small>
+        </div>
+
+        <!-- Form Buttons -->
         <button type="submit" class="btn btn-primary">Update Account</button>
         <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
     </form>
