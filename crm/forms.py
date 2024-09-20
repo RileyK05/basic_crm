@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomerInformation, Product, CustomerLead, Engagement, InternalServices, User
+from django.forms import inlineformset_factory
+from .models import CustomerInformation, Product, CustomerLead, Engagement, InternalServices, User, CustomDescriptionField
 
 # -------------------------------------------
 # User Forms
@@ -17,11 +18,20 @@ class CustomUserCreationForm(UserCreationForm):
 # Customer Forms
 # -------------------------------------------
 
+
 class CustomerForm(forms.ModelForm):
     """Form for managing customer information."""
     class Meta:
         model = CustomerInformation
         fields = ['name', 'email', 'phone', 'industry', 'company', 'education', 'income']
+
+CustomDescriptionFormSet = inlineformset_factory(
+    CustomerInformation, 
+    CustomDescriptionField, 
+    fields=['description'], 
+    extra=1,
+    can_delete=False
+)
 
 
 # -------------------------------------------

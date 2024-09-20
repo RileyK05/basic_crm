@@ -11,7 +11,10 @@ from django.utils import timezone
 from .models import (
     CustomerInformation, Product, ProductsPurchased, CustomerLead, Engagement, LifetimeValue, InternalServices,
 )
-from .forms import CustomerForm, ProductForm, LeadForm, EngagementForm, CustomUserCreationForm, InternalServiceMetricForm
+from .forms import (
+    CustomerForm, ProductForm, LeadForm, EngagementForm, CustomUserCreationForm, 
+    InternalServiceMetricForm, CustomDescriptionFormSet
+    )
 
 
 
@@ -143,11 +146,30 @@ class CustomerListView(ListView):
 
 
 class CustomerCreateView(CreateView):
-    """ View for adding a new customer. """
     model = CustomerInformation
     form_class = CustomerForm
     template_name = 'Customer/customer_add.html'
     success_url = reverse_lazy('dashboard')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = CustomDescriptionFormSet(self.request.POST)
+        else:
+            context['formset'] = CustomDescriptionFormSet()
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        if form.is_valid() and formset.is_valid():
+            customer = form.save()
+            formset.instance = customer
+            formset.save()
+            return super().form_valid(form)
+        else:
+            return self.form_invalid(form)
+
 
 
 class CustomerDetailView(DetailView):

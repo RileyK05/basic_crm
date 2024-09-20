@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'styles/styles.css' %}">
 </head>
 <body>
+    {% load widget_tweaks %}
     {% if user.is_authenticated %}
     <div class="row">
         <!-- Sidebar -->
